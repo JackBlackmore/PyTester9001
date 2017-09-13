@@ -205,12 +205,12 @@
          <string>Chapter:</string>
         </property>
         <property name="buddy">
-         <cstring>chapterCombBox</cstring>
+         <cstring>chapterComboBox</cstring>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QComboBox" name="chapterCombBox"/>
+       <widget class="QComboBox" name="chapterComboBox"/>
       </item>
      </layout>
     </item>

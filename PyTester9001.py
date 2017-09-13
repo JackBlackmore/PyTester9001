@@ -19,39 +19,45 @@ class PyTester9001(QMainWindow, Ui_PyTester9001):
         # Connect signals to slots
         self.selectDatabaseButton.clicked.connect(self.holding_slot)  # Select Database
         self.startQuizButton.clicked.connect(self.holding_slot)  # Start Quiz
-        self.moduleComboBox.currentIndexChanged.connect(
-            lambda: self.moduleComboBox_index_changed(self.moduleComboBox))  # On Module Select
-        self.partComboBox.currentIndexChanged.connect(self.holding_slot)  # On Part Select
-        self.chapterCombBox.currentIndexChanged.connect(self.holding_slot)  # On Chapter Select
+
+        self.moduleComboBox.currentIndexChanged.connect(self.moduleComboBox_index_changed)  # On Module Select
+        self.partComboBox.currentIndexChanged.connect(self.partComboBox_index_changed)  # On Part Select
+        self.chapterComboBox.currentIndexChanged.connect(self.holding_slot)  # On Chapter Select
+
         self.revealAnswerButton.clicked.connect(self.holding_slot)  # Reveal Answer
         self.answerCorrectButton.clicked.connect(self.holding_slot)  # Answer Correct
         self.answerIncorrectButton.clicked.connect(self.holding_slot)  # Answer Incorrect
         self.stopQuizButton.clicked.connect(self.holding_slot)  # Stop Quiz
 
-    def update_ComboBox(self, combo_box_name: str, modules: List[str]):
+    def update_ComboBox(self, combo_box_name: str, items: List[str]):
         if combo_box_name == "moduleComboBox":
             self.partComboBox.clear()
-            self.chapterCombBox.clear()
+            self.chapterComboBox.clear()
         elif combo_box_name == "partComboBox":
-            self.chapterCombBox.clear()
-
-        combo_box = getattr(self, combo_box_name) # type: QComboBox
+            self.chapterComboBox.clear()
+        
+        combo_box: QComboBox = getattr(self, combo_box_name)
         combo_box.clear()
 
         combo_box.addItem(self.combo_holding_string)
-        for x in modules:
-            combo_box.addItem(x.capitalize())
+        if combo_box_name != "moduleComboBox":
+            combo_box.addItem("All")
 
+        for x in items:
+            combo_box.addItem(x)
 
     # Slots
     def holding_slot(self):
         print("holding")
 
-
     def moduleComboBox_index_changed(self, i):
         if i != 0:
             self.update_ComboBox("partComboBox", self.model.partlist(self.moduleComboBox.currentText()))
 
+    def partComboBox_index_changed(self, i):
+        if i != 0:
+            self.update_ComboBox("chapterComboBox", self.model.chapterlist(self.moduleComboBox.currentText(),
+                                                                           self.partComboBox.currentText()))
 
 
 if __name__ == '__main__':
